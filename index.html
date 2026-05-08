@@ -3,6 +3,16 @@
 <head>
     <title>Car Dealership</title>
 </head>
+
+<div class="filter-bar" style="text-align: center; margin: 20px; padding: 20px; background: #f0f0f0; border-radius: 10px;">
+    <select id="brandFilter" style="padding: 10px; margin: 5px; border-radius: 5px;">
+        <option value="all">جميع الماركات</option>
+        <option value="toyota">تويوتا</option>
+        <option value="honda">هوندا</option>
+        <option value="bmw">بي إم دبليو</option>
+    </select>
+    <button onclick="filterCars()" style="padding: 10px 20px; background: #333; color: white; border: none; border-radius: 5px;">فلترة</button>
+</div>
 <body>
     <h1>مرحباً بكم في وكالة السيارات</h1>
     <p>قائمة السيارات:</p>
@@ -11,5 +21,24 @@
         <li>هوندا أكورد - 115,000 ر.س</li>
         <li>بي إم دبليو X5 - 250,000 ر.س</li>
     </ul>
+    <script>
+    function filterCars() {
+        var brand = document.getElementById('brandFilter').value;
+        var allCars = document.querySelectorAll('.car-card');
+        
+        for(var i = 0; i < allCars.length; i++) {
+            var car = allCars[i];
+            if(brand === 'all') {
+                car.style.display = 'block';
+            } else {
+                if(car.getAttribute('data-brand') === brand) {
+                    car.style.display = 'block';
+                } else {
+                    car.style.display = 'none';
+                }
+            }
+        }
+    }
+</script>
 </body>
 </html>"<!-- Pull Request Test: CD-1 update -->" 
