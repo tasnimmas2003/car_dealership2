@@ -16,6 +16,7 @@
             background: #f5f5f5;
         }
 
+        /* الهيدر */
         header {
             background: #1a1a2e;
             color: white;
@@ -42,6 +43,7 @@
             background: #e94560;
         }
 
+        /* حاوية السيارات */
         .cars-container {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -51,6 +53,7 @@
             margin: 0 auto;
         }
 
+        /* بطاقة السيارة */
         .car-card {
             background: white;
             border-radius: 15px;
@@ -86,6 +89,12 @@
             margin: 10px 0;
         }
 
+        .car-info .details {
+            color: #666;
+            font-size: 14px;
+        }
+
+        /* فلتر البحث */
         .filter-bar {
             background: white;
             padding: 20px;
@@ -114,6 +123,19 @@
             padding: 12px 25px;
             border-radius: 8px;
             cursor: pointer;
+            font-size: 16px;
+        }
+
+        .filter-bar button:hover {
+            background: #c72a45;
+        }
+
+        /* رسالة عدم وجود نتائج */
+        .no-results {
+            text-align: center;
+            padding: 50px;
+            font-size: 20px;
+            color: #666;
         }
 
         footer {
@@ -137,6 +159,7 @@
     <a href="#" onclick="showContactForm()">اتصل بنا</a>
 </nav>
 
+<!-- فلتر البحث -->
 <div class="filter-bar">
     <select id="brandFilter">
         <option value="all">جميع الماركات</option>
@@ -144,10 +167,13 @@
         <option value="honda">هوندا</option>
         <option value="bmw">بي إم دبليو</option>
         <option value="mercedes">مرسيدس</option>
+        <option value="hyundai">هيونداي</option>
     </select>
+    <input type="text" id="searchInput" placeholder="🔍 بحث باسم السيارة...">
     <button onclick="filterCars()">فلترة</button>
 </div>
 
+<!-- حاوية عرض السيارات -->
 <div id="carsContainer" class="cars-container"></div>
 
 <footer>
@@ -155,17 +181,23 @@
 </footer>
 
 <script>
+    // بيانات السيارات
     const carsData = [
-        { id: 1, name: "تويوتا كامري", brand: "toyota", year: 2024, price: "120,000", image: "https://via.placeholder.com/400x200?text=Toyota+Camry" },
-        { id: 2, name: "هوندا أكورد", brand: "honda", year: 2024, price: "115,000", image: "https://via.placeholder.com/400x200?text=Honda+Accord" },
-        { id: 3, name: "بي إم دبليو X5", brand: "bmw", year: 2024, price: "250,000", image: "https://via.placeholder.com/400x200?text=BMW+X5" },
-        { id: 4, name: "مرسيدس E-Class", brand: "mercedes", year: 2024, price: "280,000", image: "https://via.placeholder.com/400x200?text=Mercedes+E" }
+        { id: 1, name: "تويوتا كامري", brand: "toyota", year: 2024, price: "120,000", engine: "2.5L", transmission: "أوتوماتيك", image: "https://via.placeholder.com/400x200?text=Toyota+Camry" },
+        { id: 2, name: "هوندا أكورد", brand: "honda", year: 2024, price: "115,000", engine: "2.0L", transmission: "أوتوماتيك", image: "https://via.placeholder.com/400x200?text=Honda+Accord" },
+        { id: 3, name: "بي إم دبليو X5", brand: "bmw", year: 2024, price: "250,000", engine: "3.0L", transmission: "أوتوماتيك", image: "https://via.placeholder.com/400x200?text=BMW+X5" },
+        { id: 4, name: "مرسيدس E-Class", brand: "mercedes", year: 2024, price: "280,000", engine: "2.0L", transmission: "أوتوماتيك", image: "https://via.placeholder.com/400x200?text=Mercedes+E" },
+        { id: 5, name: "هيونداي سوناتا", brand: "hyundai", year: 2024, price: "95,000", engine: "2.5L", transmission: "أوتوماتيك", image: "https://via.placeholder.com/400x200?text=Hyundai+Sonata" },
+        { id: 6, name: "تويوتا لاند كروزر", brand: "toyota", year: 2024, price: "320,000", engine: "4.6L", transmission: "أوتوماتيك", image: "https://via.placeholder.com/400x200?text=Toyota+Land+Cruiser" },
+        { id: 7, name: "هوندا سي آر-في", brand: "honda", year: 2024, price: "135,000", engine: "1.5L", transmission: "أوتوماتيك", image: "https://via.placeholder.com/400x200?text=Honda+CR-V" },
+        { id: 8, name: "بي إم دبليو الفئة السابعة", brand: "bmw", year: 2024, price: "450,000", engine: "4.4L", transmission: "أوتوماتيك", image: "https://via.placeholder.com/400x200?text=BMW+7+Series" }
     ];
 
+    // عرض السيارات
     function displayCars(cars) {
         const container = document.getElementById('carsContainer');
         if (!cars || cars.length === 0) {
-            container.innerHTML = '<div class="no-results">🚫 لا توجد سيارات مطابقة</div>';
+            container.innerHTML = '<div class="no-results">🚫 لا توجد سيارات مطابقة للبحث</div>';
             return;
         }
 
@@ -175,30 +207,77 @@
                 <div class="car-info">
                     <h3>${car.name}</h3>
                     <div class="price">💰 ${car.price} ر.س</div>
-                    <div class="details">🏭 ${car.year}</div>
+                    <div class="details">🏭 ${car.year} | ⚙️ ${car.engine} | 🔧 ${car.transmission}</div>
                 </div>
             </div>
         ).join('');
     }
 
+    // تصفية السيارات
     function filterCars() {
         const brand = document.getElementById('brandFilter').value;
+        const searchText = document.getElementById('searchInput').value.toLowerCase();
+        
         let filtered = [...carsData];
+        
         if (brand !== 'all') {
             filtered = filtered.filter(car => car.brand === brand);
         }
+        
+        if (searchText) {
+            filtered = filtered.filter(car => car.name.includes(searchText));
+        }
+        
         displayCars(filtered);
     }
 
+    // عرض تفاصيل السيارة (رح نضيفها في Story 2)
     function showCarDetails(carId) {
         const car = carsData.find(c => c.id === carId);
-        alert(🚗 ${car.name}\n💰 السعر: ${car.price} ر.س\n🏭 الموديل: ${car.year});
+        alert(🚗 ${car.name}\n💰 السعر: ${car.price} ر.س\n🏭 الموديل: ${car.year}\n⚙️ المحرك: ${car.engine}\n🔧 ناقل الحركة: ${car.transmission}\n\nسيتم نقلك قريباً لصفحة تفاصيل السيارة...);
+        window.location.href = car-details.html?id=${carId};
     }
-
+    // نموذج الاتصال (Story 5)
     function showContactForm() {
-        alert("📞 نموذج الاتصال: سيتم قريباً");
+        const formHtml = 
+            <div id="contactModal" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); display:flex; justify-content:center; align-items:center; z-index:1000;">
+                <div style="background:white; padding:30px; border-radius:15px; width:400px; text-align:center;">
+                    <h2 style="color:#1a1a2e;">📞 حجز تجربة قيادة</h2>
+                    <input type="text" id="contactName" placeholder="الاسم الكامل" style="width:100%; padding:10px; margin:10px 0; border:1px solid #ddd; border-radius:8px;">
+                    <input type="tel" id="contactPhone" placeholder="رقم الجوال" style="width:100%; padding:10px; margin:10px 0; border:1px solid #ddd; border-radius:8px;">
+                    <select id="contactCar" style="width:100%; padding:10px; margin:10px 0; border:1px solid #ddd; border-radius:8px;">
+                        <option value="">اختر السيارة</option>
+                        ${carsData.map(car => <option value="${car.name}">${car.name}</option>).join('')}
+                    </select>
+                    <button onclick="submitContact()" style="background:#e94560; color:white; border:none; padding:10px 20px; border-radius:8px; cursor:pointer;">إرسال الطلب</button>
+                    <button onclick="closeContactForm()" style="background:#ddd; border:none; padding:10px 20px; border-radius:8px; cursor:pointer; margin:5px;">إغلاق</button>
+                </div>
+            </div>
+        ;
+        document.body.insertAdjacentHTML('beforeend', formHtml);
     }
 
+    function closeContactForm() {
+        const modal = document.getElementById('contactModal');
+        if (modal) modal.remove();
+        alert("تم إغلاق النموذج");
+    }
+
+    function submitContact() {
+        const name = document.getElementById('contactName')?.value;
+        const phone = document.getElementById('contactPhone')?.value;
+        const car = document.getElementById('contactCar')?.value;
+        
+        if (!name  !phone  !car) {
+            alert("الرجاء تعبئة جميع الحقول");
+            return;
+        }
+        
+        alert(✅ شكراً ${name}، تم استلام طلب تجربة قيادة لسيارة ${car}. سنتصل بك قريباً على ${phone});
+        closeContactForm();
+    }
+
+    // تحميل السيارات عند فتح الصفحة
     displayCars(carsData);
 </script>
 
