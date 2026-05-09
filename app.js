@@ -1,35 +1,47 @@
 // Car Dealership - Main JavaScript
 
-// عرض تفاصيل السيارة
-function showCarDetails(carName, carPrice, carYear, carEngine) {
-    alert("🚗 " + carName + 
-          "\n💰 السعر: " + carPrice + " ر.س" + 
-          "\n🏭 الموديل: " + carYear + 
-          "\n⚙️ المحرك: " + carEngine);
+// بيانات السيارات
+const carsData = [
+    { id: 1, name: "تويوتا كامري", brand: "toyota", price: "120,000", year: 2024, image: "https://via.placeholder.com/400x200?text=Toyota+Camry" },
+    { id: 2, name: "هوندا أكورد", brand: "honda", price: "115,000", year: 2024, image: "https://via.placeholder.com/400x200?text=Honda+Accord" },
+    { id: 3, name: "بي إم دبليو X5", brand: "bmw", price: "250,000", year: 2024, image: "https://via.placeholder.com/400x200?text=BMW+X5" }
+];
+
+// CAR-1: عرض جميع السيارات
+function getAllCars() {
+    return carsData;
 }
 
-// فلترة السيارات
-function filterCars() {
-    var brand = document.getElementById('brandFilter').value;
-    var allCars = document.querySelectorAll('.car-card');
-    
-    for(var i = 0; i < allCars.length; i++) {
-        if(brand === 'all') {
-            allCars[i].style.display = 'block';
-        } else if(allCars[i].getAttribute('data-brand') === brand) {
-            allCars[i].style.display = 'block';
-        } else {
-            allCars[i].style.display = 'none';
-        }
+// CAR-2: عرض تفاصيل سيارة معينة
+function getCarDetails(carId) {
+    return carsData.find(car => car.id === carId);
+}
+
+// CAR-3: تصفية السيارات حسب الماركة
+function filterCarsByBrand(brand) {
+    if (brand === 'all') {
+        return carsData;
     }
+    return carsData.filter(car => car.brand === brand);
 }
 
-// نموذج الاتصال
-function showContactForm() {
-    alert("📞 سيتم تفعيل نموذج الاتصال قريباً");
+// CAR-4: إضافة سيارة جديدة (للأدمن)
+function addNewCar(car) {
+    const newId = carsData.length + 1;
+    const newCar = { id: newId, ...car };
+    carsData.push(newCar);
+    return newCar;
 }
 
-// التأكد من تحميل الصفحة
-document.addEventListener('DOMContentLoaded', function() {
-    console.log("✅ موقع وكالة السيارات جاهز");
-});
+// CAR-5: نموذج اتصال
+function validateContactForm(name, phone, car) {
+    if (!name || name.trim() === '') return false;
+    if (!phone || phone.trim() === '') return false;
+    if (!car || car === '') return false;
+    return true;
+}
+
+// تصدير الدوال للاختبار (للـ Node.js environment)
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { getAllCars, getCarDetails, filterCarsByBrand, addNewCar, validateContactForm, carsData };
+}
