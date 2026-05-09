@@ -1,0 +1,11 @@
+{
+  "name": "car-dealership",
+  "version": "1.0.0",
+  "description": "Car Dealership Website - Agile Project",
+  "main": "index.html",
+  "scripts": {
+    "test": "jest"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
